@@ -5,9 +5,33 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/hourly_forecast_item.dart';
 import 'package:weather_app/additional_info_item.dart';
 import 'package:http/http.dart' as http;
+//import 'package:weather_app/secrets.dart';
+import 'dart:convert';
+
 
 class WeatherScreen extends StatelessWidget{
   const WeatherScreen({super.key});
+
+  Future getCurrentWeather() async{
+    print("Function started ✅"); // <-- test
+    String cityName = 'London';
+    const String openWeatherAPIKey = '1c0319cb2e702fbfd93c4fbfa931aae6';
+    final res = await http.get(
+      Uri.parse('http://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$openWeatherAPIKey')
+    );
+      print("Response received ✅"); // <-- test
+    print(res.body);
+
+    if (res.statusCode == 200) {
+    final data = jsonDecode(res.body);
+    print(data['weather'][0]['description']); // Example: "clear sky"
+    print(data['main']['temp']); // Example: 288.55
+    return data;
+  } else {
+    print("Error: ${res.statusCode}");
+    return null;
+  }
+  }
 
   @override
   Widget build(BuildContext context){
@@ -85,35 +109,6 @@ class WeatherScreen extends StatelessWidget{
                 fontWeight : FontWeight.bold,
               ),
             ),
-            const SizedBox(height : 20),
-            const Text(
-              'Additional Information',
-              style : TextStyle(
-                fontSize : 24,
-                fontWeight : FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment : MainAxisAlignment.spaceAround,
-              children : [
-                AdditionalInfoItem(
-                  icon : Icons.water_drop,
-                  label : 'Humidity',
-                  value : '91',
-                ),
-                AdditionalInfoItem(
-                   icon : Icons.air,
-                  label : 'Wind Speed',
-                  value : '7.5',
-                ),
-                AdditionalInfoItem(
-                   icon : Icons.beach_access,
-                  label : 'Pressure',
-                  value : '100',
-                ),
-              ]
-            ),
             const SingleChildScrollView(
               scrollDirection : Axis.horizontal,
               child : Row(
@@ -145,6 +140,35 @@ class WeatherScreen extends StatelessWidget{
                   ),
                 ],
                 ),
+            ),
+            const SizedBox(height : 20),
+            const Text(
+              'Additional Information',
+              style : TextStyle(
+                fontSize : 24,
+                fontWeight : FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment : MainAxisAlignment.spaceAround,
+              children : [
+                AdditionalInfoItem(
+                  icon : Icons.water_drop,
+                  label : 'Humidity',
+                  value : '91',
+                ),
+                AdditionalInfoItem(
+                   icon : Icons.air,
+                  label : 'Wind Speed',
+                  value : '7.5',
+                ),
+                AdditionalInfoItem(
+                   icon : Icons.beach_access,
+                  label : 'Pressure',
+                  value : '100',
+                ),
+              ]
             ),
           ],
           )
