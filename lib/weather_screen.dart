@@ -86,15 +86,63 @@ class WeatherScreen extends StatelessWidget{
               ),
             ),
             const SizedBox(height : 20),
+            const Text(
+              'Additional Information',
+              style : TextStyle(
+                fontSize : 24,
+                fontWeight : FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment : MainAxisAlignment.spaceAround,
+              children : [
+                AdditionalInfoItem(
+                  icon : Icons.water_drop,
+                  label : 'Humidity',
+                  value : '91',
+                ),
+                AdditionalInfoItem(
+                   icon : Icons.air,
+                  label : 'Wind Speed',
+                  value : '7.5',
+                ),
+                AdditionalInfoItem(
+                   icon : Icons.beach_access,
+                  label : 'Pressure',
+                  value : '100',
+                ),
+              ]
+            ),
             const SingleChildScrollView(
               scrollDirection : Axis.horizontal,
               child : Row(
                 children: [
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
-                  HourlyForecastItem(),
+                  HourlyForecastItem(
+                    time : '00:00',
+                    icon : Icons.cloud,
+                    temperature : '301.22',
+                  ),
+                  HourlyForecastItem(
+                     time : '03:00',
+                    icon : Icons.sunny,
+                    temperature : '300.52',
+                  ),
+                  HourlyForecastItem(
+                     time : '06:00',
+                    icon : Icons.cloud,
+                    temperature : '302.22',
+                  ),
+                  HourlyForecastItem(
+                     time : '09:00',
+                    icon : Icons.sunny,
+                    temperature : '300.12',
+                  ),
+                  HourlyForecastItem(
+                     time : '12:00',
+                    icon : Icons.cloud,
+                    temperature : '304.12',
+                  ),
                 ],
                 ),
             ),
