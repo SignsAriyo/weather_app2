@@ -17,6 +17,8 @@ class WeatherScreen extends StatefulWidget{
 }
 
 class _WeatherScreenState extends State<WeatherScreen>{
+  double temp = 0;
+
   @override
   void initState(){
     super.initState();
@@ -35,12 +37,12 @@ class _WeatherScreenState extends State<WeatherScreen>{
     if(data['cod'] != '200'){
       throw 'An unexpected error occurred';
     }
-    print(data['list'][0]['main']['temp']);
+    //print(data['list'][0]['main']['temp']);
   } catch(e){
-    throw e.toString();
+    throw 'An unexpected error occurred';
   }
   }
-  
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
