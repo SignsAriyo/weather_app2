@@ -1,38 +1,46 @@
 //@
 
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:weather_app/hourly_forecast_item.dart';
 import 'package:weather_app/additional_info_item.dart';
 import 'package:http/http.dart' as http;
-//import 'package:weather_app/secrets.dart';
-import 'dart:convert';
+import 'package:weather_app/secrets.dart';
 
 
-class WeatherScreen extends StatelessWidget{
+class WeatherScreen extends StatefulWidget{
   const WeatherScreen({super.key});
 
+  @override
+  State<WeatherScreen> createState() => _WeatherScreenState();
+}
+
+class _WeatherScreenState extends State<WeatherScreen>{
+  @override
+  void initState(){
+    super.initState();
+    getCurrentWeather();
+  }
+
   Future getCurrentWeather() async{
-    print("Function started ✅"); // <-- test
+    try{
     String cityName = 'London';
-    const String openWeatherAPIKey = '1c0319cb2e702fbfd93c4fbfa931aae6';
     final res = await http.get(
-      Uri.parse('http://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$openWeatherAPIKey')
-    );
-      print("Response received ✅"); // <-- test
-    print(res.body);
-
-    if (res.statusCode == 200) {
+      Uri.parse(
+        'http://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$openWeatherAPIKey'
+        ),
+    ); 
     final data = jsonDecode(res.body);
-    print(data['weather'][0]['description']); // Example: "clear sky"
-    print(data['main']['temp']); // Example: 288.55
-    return data;
-  } else {
-    print("Error: ${res.statusCode}");
-    return null;
+    if(data['cod'] != '200'){
+      throw 'An unexpected error occurred';
+    }
+    print(data['list'][0]['main']['temp']);
+  } catch(e){
+    throw e.toString();
   }
   }
-
+  
   @override
   Widget build(BuildContext context){
     return Scaffold(
