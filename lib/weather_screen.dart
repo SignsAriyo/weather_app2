@@ -7,6 +7,7 @@ import 'package:weather_app/hourly_forecast_item.dart';
 import 'package:weather_app/additional_info_item.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/secrets.dart';
+import 'package:intl/intl.dart';
 
 
 class WeatherScreen extends StatefulWidget{
@@ -56,7 +57,9 @@ class _WeatherScreenState extends State<WeatherScreen>{
         centerTitle : true,
         actions : [
           IconButton(
-            onPressed :() {},
+            onPressed :() {
+              setState((){});
+            },
             icon : const Icon(Icons.refresh),
           )
         ],
@@ -75,7 +78,7 @@ class _WeatherScreenState extends State<WeatherScreen>{
           }
           final data = snapshot.data!;
           final currentTemp = data['list'][0]['main']['temp'];
-          final currentSky = data['list'][0]['weather'][1]['main'];
+          final currentSky = data['list'][0]['weather'][0]['main'];
           final currentPressure = data['list'][0]['main']['pressure'];
           final currentWindSpeed = data['list'][0]['wind']['speed'];
           final currentHumidity = data['list'][0]['main']['humidity'];
@@ -112,7 +115,7 @@ class _WeatherScreenState extends State<WeatherScreen>{
                         ),
                 SizedBox(height : 16.0),
                 Icon(
-                  currentSky == 'Clouds' || currentSky == 'Rain' ? Icons.cloud : Icons.sunny,
+                  currentSky == 'Clouds' || currentSky == 'Rain' ? Icons.cloud : Icons.wb_sunny,
                   size : 64,
                 ),
                 SizedBox(height : 16.0),
@@ -137,37 +140,24 @@ class _WeatherScreenState extends State<WeatherScreen>{
                     fontWeight : FontWeight.bold,
                   ),
                 ),
-                const SingleChildScrollView(
-                  scrollDirection : Axis.horizontal,
-                  child : Row(
-                    children: [
-                      HourlyForecastItem(
-                        time : '00:00',
-                        icon : Icons.cloud,
-                        temperature : '301.22',
-                      ),
-                      HourlyForecastItem(
-                         time : '03:00',
-                        icon : Icons.sunny,
-                        temperature : '300.52',
-                      ),
-                      HourlyForecastItem(
-                         time : '06:00',
-                        icon : Icons.cloud,
-                        temperature : '302.22',
-                      ),
-                      HourlyForecastItem(
-                         time : '09:00',
-                        icon : Icons.sunny,
-                        temperature : '300.12',
-                      ),
-                      HourlyForecastItem(
-                         time : '12:00',
-                        icon : Icons.cloud,
-                        temperature : '304.12',
-                      ),
-                    ],
-                    ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height : 120,
+                  child : ListView.builder(
+                    itemCount : 5,
+                    scrollDirection : Axis.horizontal,
+                    itemBuilder : (context, index){
+                      final hourlyForecast = data['list'][index+1];
+                      final hourlySky = data['list'][index+1]['weather'][0]['main'];
+                      final hourlyTemp = hourlyForecast['main']['temp'].toString();
+                      final time = DateTime.parse(hourlyForecast['dt_txt']);
+                        return HourlyForecastItem(
+                          time : DateFormat.j().format(time),
+                          temperature : hourlyTemp,
+                          icon : hourlySky == 'Clouds' || hourlySky == 'Rain' ? Icons.cloud : Icons.sunny,
+                        );
+                    },
+                  ),
                 ),
                 const SizedBox(height : 20),
                 const Text(
